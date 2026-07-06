@@ -1,4 +1,4 @@
-import { BASE_CURRENCY } from "./Engine";
+import { BASE_CURRENCY } from "./Engine.js";
 
 export interface Order {
     price: number;
