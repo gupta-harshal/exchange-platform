@@ -204,10 +204,6 @@ Messages look like `{ "type": "depth" | "trade" | "ticker", "data": { ... } }`.
 - Self-trade prevention (won’t match your own resting orders)
 - Incremental depth maps for fast book updates
 - Correct aggressor / `isBuyerMaker` flags on trades
-- Snapshot writes are best-effort (won’t crash if OneDrive locks the file)
 
 ---
 
-## License
-
-Educational / demo project.
