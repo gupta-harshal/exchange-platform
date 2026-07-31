@@ -1,10 +1,10 @@
-import { Order } from "../trade/Orderbook";
+import { Order } from "../trade/OrderBook.js";
 
 export const CREATE_ORDER = "CREATE_ORDER";
 export const CANCEL_ORDER = "CANCEL_ORDER";
 export const ON_RAMP = "ON_RAMP";
-
 export const GET_DEPTH = "GET_DEPTH";
+export const GET_BALANCE = "GET_BALANCE";
 
 export type MessageToApi = {
     type: "DEPTH",
@@ -33,4 +33,42 @@ export type MessageToApi = {
 } | {
     type: "OPEN_ORDERS",
     payload: Order[]
+} | {
+    type: "BALANCE",
+    payload: {
+        [asset: string]: {
+            available: number,
+            locked: number
+        }
+    }
+} | {
+    type: "ON_RAMP",
+    payload: {
+        userId: string,
+        amount: number
+    }
+} | {
+    type: "TRADES",
+    payload: {
+        id: number,
+        isBuyerMaker: boolean,
+        price: string,
+        quantity: string,
+        quoteQuantity: string,
+        timestamp: number,
+        market: string
+    }[]
+} | {
+    type: "TICKERS",
+    payload: {
+        symbol: string,
+        firstPrice: string,
+        lastPrice: string,
+        high: string,
+        low: string,
+        volume: string,
+        quoteVolume: string,
+        priceChange: string,
+        priceChangePercent: string
+    }[]
 }

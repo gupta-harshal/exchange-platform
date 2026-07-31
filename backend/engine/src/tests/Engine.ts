@@ -4,7 +4,6 @@ import { ORDER_UPDATE, TRADE_ADDED } from "../types/index";
 import { CANCEL_ORDER, CREATE_ORDER, GET_DEPTH, GET_OPEN_ORDERS, MessageFromApi, ON_RAMP } from "../types/fromApi";
 import { Fill, Order, Orderbook } from "./Orderbook";
 
-//TODO: Avoid floats everywhere, use a decimal similar to the PayTM project for every currency
 export const BASE_CURRENCY = "INR";
 
 interface UserBalance {
@@ -200,10 +199,10 @@ export class Engine {
         const { fills, executedQty } = orderbook.addOrder(order);
         this.updateBalance(userId, baseAsset, quoteAsset, side, fills, executedQty);
 
-        this.createDbTrades(fills, market, userId);
+        this.createDbTrades(fills, market, side);
         this.updateDbOrders(order, executedQty, fills, market);
         this.publisWsDepthUpdates(fills, price, side, market);
-        this.publishWsTrades(fills, userId, market);
+        this.publishWsTrades(fills, side, market);
         return { executedQty, fills, orderId: order.orderId };
     }
 
@@ -231,14 +230,14 @@ export class Engine {
         });
     }
 
-    createDbTrades(fills: Fill[], market: string, userId: string) {
+    createDbTrades(fills: Fill[], market: string, side: "buy" | "sell") {
         fills.forEach(fill => {
             RedisManager.getInstance().pushMessage({
                 type: TRADE_ADDED,
                 data: {
                     market: market,
                     id: fill.tradeId.toString(),
-                    isBuyerMaker: fill.otherUserId === userId, // TODO: Is this right?
+                    isBuyerMaker: side === "sell",
                     price: fill.price,
                     quantity: fill.qty.toString(),
                     quoteQuantity: (fill.qty * Number(fill.price)).toString(),
@@ -248,14 +247,14 @@ export class Engine {
         });
     }
 
-    publishWsTrades(fills: Fill[], userId: string, market: string) {
+    publishWsTrades(fills: Fill[], side: "buy" | "sell", market: string) {
         fills.forEach(fill => {
             RedisManager.getInstance().publishMessage(`trade@${market}`, {
                 stream: `trade@${market}`,
                 data: {
                     e: "trade",
                     t: fill.tradeId,
-                    m: fill.otherUserId === userId, // TODO: Is this right?
+                    m: side === "sell",
                     p: fill.price,
                     q: fill.qty.toString(),
                     s: market,

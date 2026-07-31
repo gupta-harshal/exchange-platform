@@ -1,0 +1,16 @@
+{
+  "name": "exchange-platform",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "docker:up": "docker compose -f backend/docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f backend/docker/docker-compose.yml down",
+    "dev:engine": "npm run dev --prefix backend/engine",
+    "dev:api": "npm run dev --prefix backend/api",
+    "dev:ws": "npm run dev --prefix backend/ws",
+    "dev:mm": "npm run start --prefix backend/mm",
+    "dev:db": "npm run start --prefix backend/db",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "install:all": "npm install --prefix backend/engine && npm install --prefix backend/api && npm install --prefix backend/ws && npm install --prefix backend/db && npm install --prefix backend/mm && npm install --prefix frontend"
+  }
+}

@@ -1,0 +1,72 @@
+import { Order } from "../trade/OrderBook.js";
+export declare const CREATE_ORDER = "CREATE_ORDER";
+export declare const CANCEL_ORDER = "CANCEL_ORDER";
+export declare const ON_RAMP = "ON_RAMP";
+export declare const GET_DEPTH = "GET_DEPTH";
+export declare const GET_BALANCE = "GET_BALANCE";
+export type MessageToApi = {
+    type: "DEPTH";
+    payload: {
+        bids: [string, string][];
+        asks: [string, string][];
+    };
+} | {
+    type: "ORDER_PLACED";
+    payload: {
+        orderId: string;
+        executedQty: number;
+        fills: {
+            price: string;
+            qty: number;
+            tradeId: number;
+        }[];
+    };
+} | {
+    type: "ORDER_CANCELLED";
+    payload: {
+        orderId: string;
+        executedQty: number;
+        remainingQty: number;
+    };
+} | {
+    type: "OPEN_ORDERS";
+    payload: Order[];
+} | {
+    type: "BALANCE";
+    payload: {
+        [asset: string]: {
+            available: number;
+            locked: number;
+        };
+    };
+} | {
+    type: "ON_RAMP";
+    payload: {
+        userId: string;
+        amount: number;
+    };
+} | {
+    type: "TRADES";
+    payload: {
+        id: number;
+        isBuyerMaker: boolean;
+        price: string;
+        quantity: string;
+        quoteQuantity: string;
+        timestamp: number;
+        market: string;
+    }[];
+} | {
+    type: "TICKERS";
+    payload: {
+        symbol: string;
+        firstPrice: string;
+        lastPrice: string;
+        high: string;
+        low: string;
+        volume: string;
+        quoteVolume: string;
+        priceChange: string;
+        priceChangePercent: string;
+    }[];
+};
